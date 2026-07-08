@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero text-center">
+  <h1>HPLC Method Troubleshooting Decision Tool</h1>
+  <p class="lead">
+    A deterministic Flask + Python web app for HPLC peak troubleshooting.
+  </p>
+  <a href="/analyse" class="btn btn-primary btn-lg">Start Analysis</a>
+</section>
+
+<section class="mt-5">
+  <h3>What this starter version does</h3>
+  <ul>
+    <li>Accepts basic peak table data</li>
+    <li>Calculates k, Rs, alpha, N and HETP</li>
+    <li>Builds a composite key</li>
+    <li>Fires a deterministic rule</li>
+    <li>Shows a recommended fix</li>
+  </ul>
+</section>
+{% endblock %}

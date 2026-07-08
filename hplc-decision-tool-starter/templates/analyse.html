@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Run HPLC Analysis</h1>
+
+<form method="post" class="mt-4">
+
+  <div class="card mb-4">
+    <div class="card-header">Method Specifications</div>
+    <div class="card-body row g-3">
+      <div class="col-md-3">
+        <label class="form-label">Run Time Specification (min)</label>
+        <input name="run_time_spec" type="number" step="0.01" class="form-control" value="20">
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Resolution Specification</label>
+        <input name="rs_spec" type="number" step="0.01" class="form-control" value="1.4">
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Observed Peak Count</label>
+        <input name="observed_peak_count" type="number" step="1" class="form-control" value="7">
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Total Run Time (min)</label>
+        <input name="total_run_time" type="number" step="0.01" class="form-control" value="18">
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Void Time t0 (min)</label>
+        <input name="void_time" type="number" step="0.01" class="form-control" value="1.0">
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Column Length (mm)</label>
+        <input name="column_length" type="number" step="0.01" class="form-control" value="150">
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header">Peak Table</div>
+    <div class="card-body table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead>
+          <tr>
+            <th>Peak</th>
+            <th>Retention Time tR</th>
+            <th>USP Width</th>
+            <th>Width at Half Height</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for label, display, tr in [
+            ("uracil", "Uracil", "1.0"),
+            ("c1", "C1", "3.0"),
+            ("c2", "C2", "5.2"),
+            ("c3", "C3", "7.6"),
+            ("c4", "C4", "10.1"),
+            ("c5", "C5", "13.0"),
+            ("c6", "C6", "16.5")
+          ] %}
+          <tr>
+            <td>{{ display }}</td>
+            <td><input name="{{ label }}_tr" type="number" step="0.001" class="form-control" value="{{ tr }}"></td>
+            <td><input name="{{ label }}_usp_width" type="number" step="0.001" class="form-control" value="0.8"></td>
+            <td><input name="{{ label }}_half_width" type="number" step="0.001" class="form-control" value="0.4"></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header">Lever History</div>
+    <div class="card-body">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="tried_retention" id="tried_retention">
+        <label class="form-check-label" for="tried_retention">Retention already tried</label>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="tried_selectivity" id="tried_selectivity">
+        <label class="form-check-label" for="tried_selectivity">Selectivity already tried</label>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="tried_efficiency" id="tried_efficiency">
+        <label class="form-check-label" for="tried_efficiency">Efficiency already tried</label>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="tried_gradient" id="tried_gradient">
+        <label class="form-check-label" for="tried_gradient">Gradient already tried</label>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-primary btn-lg" type="submit">Run Analysis</button>
+</form>
+{% endblock %}

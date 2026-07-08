@@ -1,0 +1,13 @@
+body {
+  background: #f7f7f8;
+}
+
+.hero {
+  padding: 80px 20px;
+  background: white;
+  border-radius: 16px;
+}
+
+.card {
+  border-radius: 12px;
+}

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Results</h1>
+
+<div class="alert alert-info mt-3">
+  <strong>Composite Key:</strong> {{ analysis.key_data.composite_key }}
+  <br>
+  <strong>Peak Category:</strong> {{ analysis.key_data.peak_cat }},
+  <strong>Runtime Category:</strong> {{ analysis.key_data.runtime_cat }},
+  <strong>Rs Category:</strong> {{ analysis.key_data.rs_cat }}
+</div>
+
+<div class="card mb-4">
+  <div class="card-header">Fired Rule</div>
+  <div class="card-body">
+    <h4>Rule {{ rule.rule_id }} — {{ rule.scenario }}</h4>
+    <p><strong>Root Cause:</strong> {{ rule.root_cause }}</p>
+    <p><strong>Diagnostic Action:</strong> {{ rule.diagnostic_action }}</p>
+    <p><strong>Recommended Fix:</strong> {{ rule.recommended_fix }}</p>
+    <p><strong>Rationale:</strong> {{ rule.rationale }}</p>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header">Lever Tracker</div>
+  <div class="card-body">
+    <p><strong>State:</strong> {{ lever.state }}</p>
+    <p><strong>Next Action:</strong> {{ lever.next_action }}</p>
+  </div>
+</div>
+
+<h3>Retention Factor, N and HETP</h3>
+<div class="table-responsive mb-4">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Peak</th>
+        <th>tR</th>
+        <th>k</th>
+        <th>k Status</th>
+        <th>N</th>
+        <th>N Status</th>
+        <th>HETP</th>
+        <th>HETP Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for peak in analysis.peaks %}
+      <tr>
+        <td>{{ peak.label }}</td>
+        <td>{{ peak.tr|round_blank }}</td>
+        <td>{{ peak.k|round_blank }}</td>
+        <td>{{ peak.k_status }}</td>
+        <td>{{ peak.n|round_blank }}</td>
+        <td>{{ peak.n_status }}</td>
+        <td>{{ peak.hetp|round_blank }}</td>
+        <td>{{ peak.hetp_status }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<h3>Resolution</h3>
+<p><strong>Rs min:</strong> {{ analysis.rs_min|round_blank }}</p>
+<div class="table-responsive mb-4">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Pair</th>
+        <th>Rs</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pair in analysis.rs_pairs %}
+      <tr>
+        <td>{{ pair.pair }}</td>
+        <td>{{ pair.rs|round_blank }}</td>
+        <td>{{ pair.status }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<h3>Selectivity</h3>
+<div class="table-responsive mb-4">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Pair</th>
+        <th>Alpha</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pair in analysis.alpha_pairs %}
+      <tr>
+        <td>{{ pair.pair }}</td>
+        <td>{{ pair.alpha|round_blank }}</td>
+        <td>{{ pair.status }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<a href="/analyse" class="btn btn-secondary">Run another analysis</a>
+{% endblock %}
