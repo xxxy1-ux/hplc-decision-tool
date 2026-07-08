@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Method Specs · HPLC Decision Tool{% endblock %}
+{% block content %}
+{% set step = 1 %}
+{% include "_stepper.html" %}
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h2 class="h4 mb-3">Input: Method Specs</h2>
+        <p class="text-muted">Set the run-time and resolution specifications used by downstream categorisation.</p>
+        <form method="post" novalidate>
+          <div class="mb-3">
+            <label class="form-label">Method Name</label>
+            <input class="form-control" name="method_name" value="{{ data.method_name }}" placeholder="e.g. HPLC Trial V2">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Run Time Specification (min)</label>
+            <input type="number" step="0.01" min="0" class="form-control {% if errors.run_time_spec %}is-invalid{% endif %}" name="run_time_spec" value="{{ data.run_time_spec }}" required>
+            {% if errors.run_time_spec %}<div class="invalid-feedback">{{ errors.run_time_spec }}</div>{% endif %}
+          </div>
+          <div class="mb-4">
+            <label class="form-label">Resolution Specification (Rs)</label>
+            <input type="number" step="0.01" min="0" class="form-control {% if errors.rs_spec %}is-invalid{% endif %}" name="rs_spec" value="{{ data.rs_spec }}" required>
+            {% if errors.rs_spec %}<div class="invalid-feedback">{{ errors.rs_spec }}</div>{% endif %}
+          </div>
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-primary" type="submit">Next</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

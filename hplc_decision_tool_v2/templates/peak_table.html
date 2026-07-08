@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Peak Table · HPLC Decision Tool{% endblock %}
+{% block content %}
+{% set step = 2 %}
+{% include "_stepper.html" %}
+<div class="card shadow-sm mb-4">
+  <div class="card-body p-4">
+    <h2 class="h4 mb-3">Input: Peak Table</h2>
+    <p class="text-muted">Enter run-level inputs and observed peak data for uracil plus six compounds. The same width field is used for Rs and N/HETP according to the supplied version.</p>
+    {% if warnings %}
+      <div class="alert alert-warning"><strong>Warnings:</strong><ul class="mb-0">{% for w in warnings %}<li>{{ w }}</li>{% endfor %}</ul></div>
+    {% endif %}
+    <form method="post" novalidate>
+      <h3 class="h6 text-uppercase text-muted">Run-level inputs</h3>
+      <div class="row g-3 mb-4">
+        <div class="col-md-3">
+          <label class="form-label">Observed Peak Count</label>
+          <input type="number" class="form-control {% if errors.observed_peak_count %}is-invalid{% endif %}" name="observed_peak_count" value="{{ data.observed_peak_count }}" min="0" max="15" required>
+          {% if errors.observed_peak_count %}<div class="invalid-feedback">{{ errors.observed_peak_count }}</div>{% endif %}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Total Run Time (min)</label>
+          <input type="number" step="0.01" class="form-control {% if errors.total_run_time %}is-invalid{% endif %}" name="total_run_time" value="{{ data.total_run_time }}" required>
+          {% if errors.total_run_time %}<div class="invalid-feedback">{{ errors.total_run_time }}</div>{% endif %}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Void Time t0 (min)</label>
+          <input type="number" step="0.001" class="form-control {% if errors.void_time %}is-invalid{% endif %}" name="void_time" value="{{ data.void_time }}" required>
+          {% if errors.void_time %}<div class="invalid-feedback">{{ errors.void_time }}</div>{% endif %}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Column Length (mm)</label>
+          <input type="number" step="0.01" class="form-control {% if errors.column_length %}is-invalid{% endif %}" name="column_length" value="{{ data.column_length }}">
+          {% if errors.column_length %}<div class="invalid-feedback">{{ errors.column_length }}</div>{% endif %}
+        </div>
+      </div>
+
+      <h3 class="h6 text-uppercase text-muted">Per-peak data</h3>
+      <div class="table-responsive mb-4">
+        <table class="table table-sm align-middle peak-table">
+          <thead>
+            <tr>
+              <th>Peak #</th><th>Retention Time</th><th>Area</th><th>Height</th><th>USP Width / W½</th><th>Tailing Factor</th><th>S/N</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for peak in data.peaks %}
+              <tr>
+                <td class="fw-semibold">{{ peak.label }}</td>
+                <td><input name="peak_{{ peak.peak_number }}_rt" type="number" step="0.001" class="form-control form-control-sm" value="{{ peak.retention_time or '' }}"></td>
+                <td><input name="peak_{{ peak.peak_number }}_area" type="number" step="0.001" class="form-control form-control-sm" value="{{ peak.area or '' }}"></td>
+                <td><input name="peak_{{ peak.peak_number }}_height" type="number" step="0.001" class="form-control form-control-sm" value="{{ peak.height or '' }}"></td>
+                <td><input name="peak_{{ peak.peak_number }}_width" type="number" step="0.001" class="form-control form-control-sm" value="{{ peak.usp_width or '' }}"></td>
+                <td><input name="peak_{{ peak.peak_number }}_tailing" type="number" step="0.001" class="form-control form-control-sm" value="{{ peak.tailing_factor or '' }}"></td>
+                <td><input name="peak_{{ peak.peak_number }}_sn" type="number" step="0.001" class="form-control form-control-sm" value="{{ peak.signal_to_noise or '' }}"></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="border rounded-3 p-3 mb-4 bg-light">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <div>
+            <h3 class="h6 mb-1">Upload CSV or PDF peak table</h3>
+            <p class="text-muted small mb-0">Placeholder only. AI parsing is optional and disabled in this local deterministic build.</p>
+          </div>
+          <input type="file" class="form-control w-auto" disabled>
+        </div>
+      </div>
+
+      <h3 class="h6 text-uppercase text-muted">Optional diagnostic reference inputs</h3>
+      <div class="row g-3 mb-4">
+        <div class="col-md-3"><label class="form-label">Reference Total Area</label><input name="reference_total_area" type="number" step="0.001" class="form-control" value="{{ data.reference_total_area }}"></div>
+        <div class="col-md-3"><label class="form-label">Reference Area / Peak</label><input name="reference_peak_area" type="number" step="0.001" class="form-control" value="{{ data.reference_peak_area }}"></div>
+        <div class="col-md-3"><label class="form-label">Expected Last Elution (min)</label><input name="expected_last_elution_time" type="number" step="0.001" class="form-control" value="{{ data.expected_last_elution_time }}"></div>
+        <div class="col-md-3"><label class="form-label">Expected Void Time (min)</label><input name="expected_void_time" type="number" step="0.001" class="form-control" value="{{ data.expected_void_time }}"></div>
+        <div class="col-md-4">
+          <label class="form-label">Spiking Result</label>
+          <select name="spiking_result" class="form-select">
+            <option value="not_done" {% if data.spiking_result == 'not_done' %}selected{% endif %}>Not performed</option>
+            <option value="coelutes" {% if data.spiking_result == 'coelutes' %}selected{% endif %}>Spiked compound co-elutes</option>
+            <option value="new_peak" {% if data.spiking_result == 'new_peak' %}selected{% endif %}>Spiked compound forms new peak</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <a class="btn btn-outline-secondary" href="{{ url_for('specs') }}">Back</a>
+        <button class="btn btn-primary" type="submit">Next</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

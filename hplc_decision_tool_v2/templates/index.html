@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Home · HPLC Decision Tool{% endblock %}
+{% block content %}
+<section class="hero card border-0 shadow-sm p-5 text-center">
+  <div class="badge text-bg-light align-self-center mb-3">Deterministic Core + Optional AI I/O</div>
+  <h1 class="display-5 fw-bold">HPLC Method Troubleshooting Decision Tool</h1>
+  <p class="lead text-muted mt-3">7-Peak Chromatogram decision support for rule-based HPLC method troubleshooting.</p>
+  <p class="mx-auto hero-copy">This web app replaces the spreadsheet dashboard with a structured browser workflow. The decision engine uses server-side Python for k, Rs, α, N, HETP, merged-versus-absent diagnostics, composite-key lookup, and lever-tracker escalation.</p>
+  <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
+    <a class="btn btn-primary btn-lg px-4" href="{{ url_for('specs') }}">Start Analysis</a>
+    <a class="btn btn-outline-secondary btn-lg px-4" href="{{ url_for('documentation') }}">Documentation</a>
+  </div>
+</section>
+
+<div class="row g-4 mt-4">
+  <div class="col-md-4"><div class="feature-card"><h5>Rule lookup</h5><p>Composite-key lookup against Lookup_Master plus the 6-rule resolution sub-matrix.</p></div></div>
+  <div class="col-md-4"><div class="feature-card"><h5>Calculation panels</h5><p>Retention factor, resolution, selectivity, efficiency, and HETP shown with status badges.</p></div></div>
+  <div class="col-md-4"><div class="feature-card"><h5>Validation log</h5><p>Save recommendations, lab outcomes, match status, and chromatogram records.</p></div></div>
+</div>
+{% endblock %}
