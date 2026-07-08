@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Documentation · HPLC Decision Tool{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Documentation</h1>
+<p class="text-muted">Rule tables are implemented as deterministic server-side data. Rules 18 and 19 are preserved as duplicate guidance because their composite keys duplicate Rules 10 and 11.</p>
+
+<div class="card shadow-sm mb-4">
+  <div class="card-header fw-semibold">Lookup_Master Rules</div>
+  <div class="table-responsive">
+    <table class="table table-sm mb-0">
+      <thead><tr><th>ID</th><th>Active</th><th>Key</th><th>Root Cause</th><th>Recommended Fix</th></tr></thead>
+      <tbody>
+        {% for r in master_rules %}
+          <tr class="{% if not r.active_lookup %}table-warning{% endif %}">
+            <td>{{ r.rule_id }}</td><td>{{ 'Yes' if r.active_lookup else 'Reference duplicate' }}</td><td><code>{{ r.composite_key }}</code></td><td>{{ r.root_cause_category }}</td><td>{{ r.recommended_fix }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-header fw-semibold">Lookup_Resolution Sub-Rules</div>
+  <div class="table-responsive">
+    <table class="table table-sm mb-0">
+      <thead><tr><th>ID</th><th>Key</th><th>Diagnosis</th><th>Recommended Fix</th></tr></thead>
+      <tbody>
+        {% for r in resolution_rules %}
+          <tr><td>{{ r.rule_id }}</td><td><code>{{ r.composite_key }}</code></td><td>{{ r.diagnosis }}</td><td>{{ r.recommended_fix }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
